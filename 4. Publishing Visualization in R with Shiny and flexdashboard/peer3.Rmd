@@ -1,0 +1,103 @@
+---
+title: "Peer Review Three"
+output: 
+  flexdashboard::flex_dashboard:
+  orientation: columns
+  vertical_layout: fill
+runtime: shiny
+---
+
+```{r setup, include=FALSE}
+library(flexdashboard)
+library(tidyverse)
+library(plotly)
+library(shiny)
+
+dat<-read_csv("../Data/cel_volden_wiseman.csv")
+
+dat$Party<-recode(dat$dem,`1` = "Democrat",`0` = "Republican")
+```
+
+
+Page 1
+======
+
+### Chart A
+
+
+```{r}
+dat %>% 
+  drop_na() %>% 
+  filter(year>1979) %>% 
+  group_by(year,Party) %>% 
+  summarise(passed=sum(all_pass)) %>% 
+  ggplot(aes(year,passed)) + geom_area(position = "stack",aes(fill = Party)) + 
+  scale_fill_manual(values = c("blue","red")) + xlab("Year") + ylab("All Bills Passed") + 
+  ggtitle("Number Of Bills Passed Since 1980")
+```
+
+Page 2
+======
+
+Column
+-------------------------------------------------
+
+### Chart B 
+
+```{r}
+ggplotly(
+dat%>%
+  drop_na()%>%
+  filter(congress==110) %>%
+  ggplot(aes(x = votepct,y = all_pass)) + geom_smooth(method = "lm",
+                                                      formula = "y ~ x",aes(colour = Party)) +
+  geom_point(aes(colour = Party),show.legend = F) + 
+  scale_fill_manual(values = c("blue","red"),aesthetics = "colour") + 
+  xlab("Vote Pct.") + ylab("All Pass") + ggtitle("Passage and Vote Pct., 110th Congress")
+)
+```
+
+Column 
+-------------------------------------------------
+
+### Chart C
+
+```{r}
+ggplotly(
+dat%>%
+  drop_na()%>%
+  filter(congress==110) %>% 
+  ggplot(aes(x = dwnom1,y = all_pass)) + geom_smooth(method = "lm",
+                                                     formula = "y ~ x",aes(colour = Party)) + 
+  geom_point(aes(colour = Party),show.legend = F) + 
+  scale_fill_manual(values = c("blue","red"),aesthetics = "colour") + 
+  xlab("DW Nominate.") + ylab("All Pass") + ggtitle("Passage and Ideology, 110th Congress"))
+```
+
+Page 3
+======
+
+Inputs {.sidebar}
+-------------------------------------------------
+
+### Chart D
+
+```{r}
+selectizeInput("state","State",choices = as.list(sort(unique(dat$st_name))),multiple = TRUE,
+            selected = as.list(sort(unique(dat$st_name))))
+```
+
+Outputs
+-------------------------------------------------
+
+```{r}
+renderPlot({
+dat %>% 
+  filter(congress==110,st_name %in% input$state) %>%
+  group_by(st_name) %>%
+  summarise(passed=sum(all_pass)) %>%
+  ggplot(aes(passed,st_name)) + geom_col() +
+  ggtitle("Total Bills Passed By State Delegations, 110th Congress") + 
+  xlab("Total Bills Passed Per State") + ylab("State Name")},height = 720)
+```
+

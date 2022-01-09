@@ -1,0 +1,94 @@
+---
+title: "Week 3 Peer Review"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+
+######DO NOT MODIFY. This will load required packages and data.
+
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse)
+
+cces <- drop_na(read_csv("../Data/cces.csv"))
+
+cel <- drop_na(read_csv("../Data/cel_volden_wiseman.csv"))
+
+```
+
+<style>body{text-align: justify;}</style>
+
+Following the directions on the Coursera assignment page, you will make four original visualizations.
+Note that the data for the CCES and CEL data are imported in code in the R Markdown file.
+
+### Put your name here: GP
+
+## Exercise 1
+
+Explain what you are visualizing here:
+
+We created a data frame with two columns each containing numbers from a normal distribution and then
+plotted a scatter plot x-y, a text annotation and a linear fit to show that a regression line always
+passes from the mean of $\bar{x}$ and $\bar{y}$ of the distributions.
+
+Put your figure here:
+
+```{r exercise1,echo=FALSE}
+ggplot(data = data.frame(x = rnorm(500,0,4),y = rnorm(500,0,4)),aes(x,y)) + 
+  geom_point(colour = "red",alpha = 0.3) + geom_smooth(method = 'lm',formula = "y ~ x") + 
+  geom_point(data = data.frame(x=0,y=0),aes(x,y),cex = 5,colour = "black") + theme_bw() + 
+  ggtitle("Regression of N(0,4) ~ N(0,4)")
+```
+
+## Exercise 2
+
+Explain what you are visualizing here:
+
+We want to plot the distribution of the numbers of how far away is the member from the majority median
+DW-Nominate score indicative member ideology, with higher indicating a more conservative view, the data
+used is from the center for effective lawmaking.
+
+Put your figure here:
+
+```{r exercise2,echo=FALSE}
+ggplot(data = cel,aes(meddist)) + 
+  geom_density(colour = "black",lwd = 2) +  
+  geom_histogram(aes(y = ..density..),bins = 30,colour = "black",fill = "purple") + theme_bw() + 
+  xlab("distance from median DW-Nominate Score") + ggtitle("Histogram With Density Plot")
+```
+
+## Exercise 3
+
+Explain what you are visualizing here:
+
+We would like to picture a barplot of votes per region based on a research of the public of opinion of
+whether the interest rates of mortgages should be reduced. The data we will use is from the cooperative
+congressional election study.
+
+Put your figure here:
+
+```{r exercise3,echo=FALSE}
+cces$CC18_325b <- recode(cces$CC18_325b,`1` = "Support",`2` = "Oppose")
+cces$region    <- recode(cces$region,`1` = "Northwest",
+	`2` = "Midwest",`3` = "South",`4` = "West")
+ggplot(cces,aes(CC18_325b)) + geom_bar(aes(fill = CC18_325b)) + facet_grid(. ~ region) + 
+  theme(legend.title = element_blank()) + xlab('') + theme_classic() + 
+  ggtitle("Reduce the mortgage interest deduction? Opinions per region.")
+```
+
+## Exercise 4
+
+Explain what you are visualizing here:
+
+We would like to make a simple line plot to summarize the total number of bills per congress that
+became laws, the data we used is from the center for effective lawmaking.
+
+Put your figure here:
+
+```{r exercise4,echo=FALSE}
+ggplot(data = cel %>% group_by(congress) %>% 
+         summarize(all_law = sum(all_law)),aes(x = congress,y = all_law)) +
+  geom_line(lwd = 2) + geom_point(colour = "red",alpha = 0.3,cex = 4) + 
+  xlab("number of congress") + ylab("cumulative number bills that became laws") + 
+  ggtitle("Bills Per Congress That Became Laws")
+```

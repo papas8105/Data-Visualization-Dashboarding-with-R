@@ -1,0 +1,63 @@
+---
+title: "Animations and Interactivity"
+output: html_document
+---
+
+<style>body{text-align: justify;}</style>o
+
+## Problem 1
+
+```{r problem_1_data,include=FALSE}
+library(tidyverse)
+Category<-c("Alpha","Beta","Zeta")
+City <- c("Hong Kong","London","Nairobi")
+my_dat <- expand_grid(Category,City)
+set.seed(84684)
+my_dat$Value<-sample(1:10,9,replace = T)
+```
+
+```{r problem_1_solution,echo=FALSE,message=FALSE}
+library(gganimate)
+library(gifski)
+ggplot(my_dat,aes(x = Category,y = Value,fill = City)) + geom_bar(stat = "identity") + 
+  transition_states(states = City) + enter_fade() + exit_fade()
+```
+
+## Problem 2
+
+```{r problem_2_data,include=FALSE}
+Response<-c("Energize","Amazing","Great")
+set.seed(9819)
+Energize<-tibble(Company=rep("Energize",100),Output=rnorm(100,50,20))
+set.seed(9819)
+Amazing<-tibble(Company=rep("Amazing",100),Output=rnorm(100,50,10))
+set.seed(9819)
+Great<-tibble(Company=rep("Great",100),Output=rnorm(100,40,5))
+my_dat<-bind_rows(Energize,Amazing,Great)
+```
+
+```{r problem_2_solution,echo=FALSE,message=FALSE,warning=FALSE}
+library(plotly,warn.conflicts = FALSE)
+ggplotly(ggplot(data = my_dat,aes(Company,Output)) + geom_boxplot(aes(fill = Company)))
+```
+
+## Problem 3
+
+```{r problem_3_data,echo=FALSE,message=FALSE,warning=FALSE}
+library(plotly,warn.conflicts = FALSE)
+Category<-seq(from=1,to=10)
+Time<-seq(from=1,to=10)
+dat3<-expand_grid(Category,Time)
+set.seed(78957)
+dat3$Quantity<-runif(100,0,10)
+```
+
+
+```{r problem_3_solution,echo=FALSE,message=FALSE,warning=FALSE}
+library(plotly,warn.conflicts = FALSE)
+ggplotly(
+  ggplot(dat3,aes(x = Category,y = Quantity,frame = Time)) + 
+    geom_point() + 
+    geom_segment(aes(xend = Category,yend = 0))
+)
+```

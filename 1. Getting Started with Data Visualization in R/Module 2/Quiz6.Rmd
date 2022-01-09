@@ -1,0 +1,133 @@
+---
+title: "Quiz 6"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+<style>body{text-align: justify;}</style>
+
+
+### Question 1
+
+```{r q1}
+question('Say I have an tibble called "cities" with columns including population ("population"), a
+         measure of economic activity ("gdp"), and the state in which the city is located ("state").
+         <br><br>
+         Which of these commands would select rows from the dataset where the value for population is
+         more than 3,000, the value for economic activity is less than 120,000 and where the city is
+         not located in Alabama?',
+         answer('filter(cities,population>3000 & gdp<120000 & 
+                state!="Alabama")',correct = TRUE),
+         answer('filter(cities,population>3000 & gdp<120000 | state!="Alabama")'),
+         answer('select(cities,population>3000 & gdp<120000 & state!="Alabama")'),
+         answer('filter(cities,population>3000, gdp<120000, state!="Alabama")'))
+```
+
+### Question 2
+
+<b>Let's say you have a dataset that looks like this:</b>
+
+```{r,eval = FALSE,echo = TRUE}
+colors <- c("red","green","yellow")
+speeds <- c("slow","fast","medium")
+my_dat <- data.frame(colors,speeds)
+```
+
+```{r q2}
+question('What is the correct code to recode the "colors" column so that red equals 0,
+         green equals 2, and yellow equals 1?',
+         answer('my_dat$colors<-recode(my_dat$colors,"red"=0,"green"=2,"yellow"=1)',correct = TRUE),
+         answer('my_dat$colors<-recode(my_dat$colors,0=red,2=green,1=yellow)'),
+         answer('my_dat$colors<-recode(my_dat$colors,"red"==0,"green"==2,"yellow"==1)'))
+```
+
+### Question 3
+
+<b>Let's say you have a tibble named "dat" that has a time, date, employee, and sales column.
+
+You are reviewing someone's R code and see the following lines:</b>
+
+```{r,eval = FALSE,echo = TRUE}
+my_time <- filter(dat,time==1)
+my_time_and_date <- filter(my_time,date>5)
+group_by_employee_my_time_and_date <- group_by(my_time_and_date,employee)
+summarise(group_by_employee_my_time_and_date ,average=mean(sales))
+```
+
+```{r q3}
+question("Which of these would do the same thing using piping?",
+         answer("dat %>% filter(time==1 & date >5) %>% group_by(employee) %>%
+         summary(average=mean(sales))"),
+         answer("dat %>% filter(time==1 & date >5) %>% group_by(employee) %>%
+         summarise(average=mean(sales))",correct = TRUE),
+         answer("summarise(average=mean(sales)%>%dat %>% filter(time==1 & date >5) %>%
+         group_by(employee)"),
+         answer("dat %>% filter(time=1 & date >5) %>% group_by(employee) %>% 
+         summarise(average=mean(sales))"))
+```
+
+### Question 4
+
+```{r q4}
+question('You have a data frame named "dat" with two numeric columns, value1 and value2. You want to
+         add a third column called my_value where the value in each row is the product of multiplying
+         the other two values in the row by one another. Which is the correct line of code?',
+         answer("mutate(dat,my_value=value1*value2)"),
+         answer("dat <- mutate(dat,my_value=value1*value2)",correct = TRUE),
+         answer("new_column(dat,my_value=value1*value2)"),
+         answer("add_column(dat,my_value=value1*value2)"))
+```
+
+### Question 5
+
+```{r q5}
+question('Say you have a tibble saved into your R environment as "my_dat" with two columns named
+         "alpha" and "beta". You want to rename the "beta" column and call it "gamma". Which of these
+         will create a new tibble with the renamed column?',
+         answer("rename(my_dat,gamma=beta)",correct = TRUE),
+         answer("rename(my_dat,beta=gamma)"),
+         answer("mutate(my_dat,gamma=beta)"),
+         answer("recode(my_dat,gamma=beta)"))
+```
+
+#### Question 6
+
+````{r q6}
+question("Say you have a tibble saved to the object my_dat with two columns, alpha and beta. These are
+         filled with numeric data. Which of these will arrange the data in descending order by
+         alpha?",
+         answer("my_dat %>% arrange(desc(alpha))",correct = TRUE),
+         answer("arrange(my_dat,desc(alpha))",correct = TRUE),
+         answer("my_dat %>% arrange(alpha)"),
+         answer("desc(arrange(alpha,my_dat))"))
+```
+
+### Question 7
+
+```{r q7}
+question("Which of these accurately describes piping?",
+         answer("Piping allows you to write cleaner, more readable code.",correct = TRUE),
+         answer("Piping will pass data on the left hand side of the pipe to the function on the right
+         hand side of the pipe.",correct = TRUE),
+         answer("Piping will pass data on the right hand side of the pipe to the function on the left
+                hand side of the pipe."),
+         answer("Piping is an advanced technique that only experience programmers should use."))
+```
+
+### Question 8
+
+````{r q8}
+question("What's the point of using group_by()?",
+         answer("Grouping your data allows you to use those groups when summarizing data.",
+                correct = TRUE),
+         answer("Grouping your data create several new tibbles by group."),
+         answer("Grouping your data allows you to keep track of large data sets in the R
+                environment."),
+         answer("Grouping your data will create a new column in the data that allows you to 
+         manage groups."))
+```

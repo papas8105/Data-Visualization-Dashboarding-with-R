@@ -1,0 +1,102 @@
+---
+title: "Quiz 5"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+gradethis::gradethis_setup()
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+<style>body{text-align: justify;}</style>
+
+
+### Question 1
+
+```{r q1}
+question("What do you need to do to use tidyverse commands in R?",
+         answer("Go to tidyverse.org and download the tidyverse package."),
+         answer("Use the library(tidyverse) command in your R script or R console,
+         after you have installed the tidyverse.",correct = TRUE),
+         answer('Run install.packages("tidyverse") every time you want to use the
+         tidyverse commands.'))
+```
+
+### Question 2
+
+<b>When you the run the line:</b>
+
+<pre>dat <- read_csv("my_data.csv")</pre>
+
+```{r q2}
+question("what kind of object is dat?",
+         answer("Data frame"),
+         answer("Tibble",correct = TRUE),
+         answer('Matrix'),
+         answer("tidyframe"))
+```
+
+### Question 3
+
+```{r q3}
+question("Which is NOT a principle of tidy data?",
+         answer("There is no missing data.",correct = TRUE),
+         answer("Each type of observational unit forms a table."),
+         answer("Each observation forms a row."),
+         answer("Each variable forms a column."))
+```
+
+
+### Question 4
+
+```{r q4}
+question("If there is missing data in a .csv file that you import, what should you do?",
+         answer("You can ignore it and use drop_na()."),
+         answer("Assess whether you can collect new data to fill in the gaps.",correct = TRUE),
+         answer("Abandon your project."))
+```
+
+### Question 5
+
+```{r q5}
+question('The tidyverse replaces the techniques for manipulating data with base R.',
+         answer("True"),
+         answer("False",correct = TRUE))
+```
+
+### Question 6
+
+```{r q6}
+question("According to Wickham, which of these are steps in the data wrangling process?",
+         answer("Transform",correct = TRUE),
+         answer("Model"),
+         answer('Understand'),
+         answer("Import",correct = TRUE),
+         answer("Tidy",correct = TRUE))
+```
+
+### Question 7
+
+```{r q7}
+question("Which of these are advantages of tibbles over data frames?",
+         answer("You cannot change a tibble into a data frame."),
+         answer("When you run a tibble in the R console, it will only 
+                show you a preview of the data.",correct = TRUE),
+         answer("Tibbles work well with other tidyverse functions.",correct = TRUE))
+```
+
+### Question 8
+
+<b>Looking at tidyverse.org, how many core packages are included in the tidyverse?</b>
+
+```{r q8,exercise = TRUE}
+
+```
+
+```{r q8-check}
+grade_result(
+  pass_if(~identical(.result,8))
+)
+```

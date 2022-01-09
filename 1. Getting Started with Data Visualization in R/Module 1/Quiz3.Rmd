@@ -1,0 +1,65 @@
+---
+title: "Quiz 3"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+<style>body{text-align: justify;}</style>
+
+### Question 1
+
+```{r q1}
+question("What happens if you run this code? <pre>data.frame(alpha,beta)</pre>",
+         answer("You are asking R to display a data frame with alpha and beta in the R console.",
+                correct = TRUE),
+         answer("You are asking R whether the objects alpha and beta are data frames."),
+         answer("You are creating a data frame with alpha and beta and saving it to the
+         R environment."))
+```
+
+### Question 2
+
+```{r q2}
+question('What part of the data frame "states" does this code call? <pre>states[15,2]</pre>',
+         answer("The entry of the second row down in the 15th column from the left."),
+         answer("The entry of the 15th row down in the second column from the right."),
+         answer("The entry of the 15th row down in the second column from the left.",correct = TRUE))
+```
+
+### Question 3
+
+<b>Say you have a data frame named "inventory" with 3 rows and two columns, created like this:</b>
+
+```{r,eval = FALSE,echo = TRUE}
+home <- c("computer","calculator","scanner")
+office <- c("paper","pens","pencils")
+inventory <- data.frame(home,office)
+```
+
+```{r q3}
+question('What would happen if you ran this code? 
+         <pre>inventory$annex <- c("printer","stapler")</pre>',
+         answer("You'll get an error message because you are trying to add a column
+         that only has two rows.",correct = TRUE),
+         answer("A new row with the rowID office will be added to the data."),
+         answer('You\'ll get a new column called office populated by "printer" and "stapler."'))
+```
+
+### Question 4
+
+```{r q4}
+question("How many working directories can you have set simultaneously in an R session?",
+         answer("One",correct = TRUE),answer("Two"),answer("Unlimited"))
+```
+
+### Question 5
+
+```{r q5}
+question("Is it easier to import rectangular or non-rectangular data into R?",
+         answer("Non-rectangular"),answer("Rectangular",correct = TRUE))
+```

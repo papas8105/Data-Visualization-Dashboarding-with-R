@@ -1,0 +1,66 @@
+---
+title: "Quiz 1"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+<style>body{text-align: justify;}</style>
+
+### Question 1
+
+```{r q1}
+question("Which of the following most accurately describes R?",
+         answer("R has a point and click graphical interface like Tableau of Microsoft Excel."),
+         answer("R is a statistical programming language.",correct = TRUE),
+         answer("R is an operating system."))
+```
+
+
+### Question 2
+
+```{r q2}
+question("Which of the following correctly describes the relationship between RStudio and R?",
+         answer("RStudio is essentially a code editor that adds some user-friendly
+         features for writing code in R.",correct = TRUE),
+         answer("RStudio is a requirement for using R."),
+         answer("R comes installed on all PCs and Macs."))
+```
+
+### Question 3
+
+```{r q3}
+question("Which of these is the easiest way to save R code that you write for future use?",
+         answer("Write your R code in a word processor like Microsoft Word, then import
+         it into R when you want to run it."),
+         answer("Edit the code in the RStudio script pane.",correct = TRUE),
+         answer("Write your R code into the console in RStudio."))
+```
+
+### Question 4
+
+```{r q4}
+question("After you finish the trial period, R will cost hundred of dollars to use, 
+         depending on the license you purchase.",
+         answer("True."),answer("False.",correct = TRUE))
+```
+
+### Question 5
+
+```{r q5}
+question("You need to carefully learn and understand all the details about how R
+         works before you start coding.",
+         answer("True."),answer("False.",correct = TRUE))
+```
+
+### Question 6
+
+```{r q6}
+question("Are cheat sheets trustworthy guides for how to use R and RStudio?",
+         answer("No."),answer("Yes.",correct = TRUE))
+```
+

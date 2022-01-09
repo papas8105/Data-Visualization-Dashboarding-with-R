@@ -1,0 +1,72 @@
+---
+title: "Quiz 4"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+<style>body{text-align: justify;}</style>
+
+### Question 1
+
+```{r q1}
+question("Why is it helpful to be able to use functions like rnorm, rpois. rbinom, and runif?",
+         answer("These functions will check whether your data conform with common data distributions,
+         which tells you what kind of plot you should make with those data."),
+         answer("These functions tell R to draw the underlying distributions as figures, 
+         and this is a good way to see what different figures look like."),
+         answer("These functions will generate arbitrary numbers quickly that you can use to
+         test visualization functions.",correct = TRUE),
+         answer("These functions will draw figures of the distributions, and you need to be able to
+         distinguish between these different functions quickly if you are going to visualize data
+         successfully."))
+```
+
+### Question 2
+
+```{r q2}
+question("What is a histogram?",
+         answer("A histogram is a way to display bivariate data that includes discrete values in
+                multiple columns."),
+         answer("A histogram is a bar chart of the frequencies for different discrete values in a
+                vector.",correct = TRUE),
+         answer("A histogram is a time-series figure that displays historical patterns of change in a
+                vector."))
+```
+
+### Question 3
+
+```{r q3}
+question("How do you add titles and labels to figures you create with plot()?",
+         answer('Add options like "main=", "xlab=", or "ylab=" as additional arguments
+         in the function.',correct = TRUE),
+         answer('Use the "options=" argument in plot() and include the different labels as
+         elements of a vector.'),
+         answer("First, draw a figure using plot() and save it as an object. Then, use the
+         format_plot() function to add these labels."))
+```
+
+### Question 4
+
+```{r q4}
+question("What is the easiest way to export a figure you create in RStudio?",
+         answer('In the plot pane, click export, then click "Save as Image" or "Save as PDF".',
+                correct = TRUE),
+         answer('In the plot function, use the option "output=[your file path].'),
+         answer("Zoom out on the plot pane and take a screen snip."))
+```
+
+### Question 5
+
+```{r q5}
+question("By default, what is the first argument in the plot() function?",
+         answer("The y variable"),
+         answer("The plot title"),
+         answer('The data frame that you are pulling vectors from for the figure.'),
+         answer('The x variable',correct = TRUE),
+         answer("The plot type"))
+```

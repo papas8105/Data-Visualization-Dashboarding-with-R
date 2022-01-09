@@ -1,0 +1,99 @@
+---
+title: "Quiz 2"
+output: learnr::tutorial
+runtime: shiny_prerendered
+---
+
+```{r setup, include=FALSE}
+library(learnr)
+knitr::opts_chunk$set(echo = FALSE)
+```
+
+<style>body{text-align: justify;}</style>
+
+### Question 1
+
+<b>What does this line of code do in R?</b>
+
+```{r,eval = FALSE,echo = TRUE}
+a <- 2+2
+```
+
+```{r q1}
+question("",
+         answer('Tells R that "a" will be less than or equal to 2+2'),
+         answer('Creates a function (a) that will execute 2+2'),
+         answer('Assigns the value of 2+2 to the object "a"',correct = TRUE))
+```
+
+### Question 2.
+
+```{r q2}
+question('Will R return a value of true or false if you evaluate this expression?
+         <pre>"apple"=="appla"</pre>',
+         answer('It will return the value "FALSE".',correct = TRUE),
+         answer('It will return the value "TRUE".'))
+```
+
+### Question 3
+
+<b>What will happen if you try to run this line of code in R?</b>
+
+```{r,eval = FALSE,echo = TRUE}
+10variable1 <- c(5,19,10,"apple")
+```
+
+```{r q3}
+question("",
+         answer("R will return an error because you cannot combine numbers and character 
+         strings into the same vector in R."),
+         answer("R will save the vector to the object"),
+         answer("R will return an error because 10variable1 is not a valid object name.",
+         correct = TRUE))
+```
+
+### Question 4
+
+```{r q4}
+question("What does the class() function do in R?",
+         answer("Creates a new object class in R."),
+         answer("Gives a line of output that identifies the class of an object in R.",
+                correct = TRUE),
+         answer("Assigns a class to an object in R."))
+```
+
+### Question 5
+
+<b>In R, create the following object:</b>
+
+```{r,eval = FALSE,echo = TRUE}
+test_vector <- c("dog","fish","pig","parrot")
+```
+
+```{r q5}
+question("After you create the object, what do you get if you then run test_vector[4]?",
+         answer("dog"),
+         answer("fish"),
+         answer("pig"),
+         answer("parrot",correct = TRUE),
+         answer('"dog","fish","pig","parrot"'),
+         answer("TRUE"),
+         answer("FALSE"))
+```
+
+### Question 6
+
+<b>What value will this return?</b>
+
+```{r,eval = FALSE,echo = TRUE}
+subtract_and_divide<- function(x,y){
+  x-y
+  x/y
+}
+subtract_and_divide(4,8)
+```
+
+```{r q6}
+question("",
+       answer("4"),answer(".5",correct = TRUE),answer("-4"),answer("-4 and .5"))
+```
