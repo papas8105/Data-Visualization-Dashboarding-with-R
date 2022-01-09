@@ -1,2 +1,2 @@
-# Data_Visualization_Dashboarding-With-R
- jhu-visualization course
+# Data Visualization Dashboarding With R
+ jhu-visualization (Collin Paschall)
