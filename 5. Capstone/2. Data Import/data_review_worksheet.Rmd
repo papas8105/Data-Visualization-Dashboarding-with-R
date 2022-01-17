@@ -1,0 +1,65 @@
+---
+title: "Data Review"
+author: ""
+date: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE,comment = '')
+library(tidyverse)
+```
+
+<style>body{text-align: justify;}</style>
+
+## Data Import
+
+```{r data_import,cache = TRUE}
+if (!file.exists("leaf.zip")) {
+  download.file("https://archive.ics.uci.edu/ml/machine-learning-databases/00288/leaf.zip","leaf.zip")
+}
+unzip("leaf.zip")
+leaf <- read_csv("leaf.csv",col_types = "fddddddddddddddd")
+leaf <- tibble(leaf)
+names(leaf) <- c("Class","Specimen Number","Eccentricity","Aspect Ratio","Elongation","Solidity",
+                 "Stohastic Convexivity","Isoperimetric Factor","Maximal Identation Depth","Lobedness",
+                 "Average Intensity","Average Contrast","Smoothness","Third Moment","Uniformity","Entropy")
+```
+
+The data is already cleaned with no missing values and the codebook for references and features' explanations can 
+be found in the <text style = "color:red">ReadMe.pdf</text> file. For the classification metrics of the classes the 
+images in the __BW__ (black & white) folder were used.
+
+## Part 1
+
+We are going to group data by class and create a simple barplot to see how well represented with respect to samples 
+the classes are.
+
+```{r data_1}
+fig_dat1 <- leaf %>% group_by(Class) %>% count
+fig_dat1
+```
+
+## Part 2
+
+In this section we will create a boxplot with eccentricity in the y-axis and classes in the x-axis, since we were instructed 
+by experts who trained a linear model which used as predictors all the features 
+that _Eccentricity_ is the most important factor.
+
+```{r data_2}
+fig_dat2 <- leaf %>% select(Class,Eccentricity) 
+fig_dat2
+```
+
+
+## Part 3
+
+The linear model which was used as a machine learning model for predictions, provided the information that Solidity and Entropy 
+were the second and third most important factors, we are going to plot a scatter plot, coloring the points with respect to the 
+class of the leaves.
+
+```{r data_3}
+fig_dat3 <- leaf %>% select(Class,Solidity,Entropy) 
+fig_dat3
+```
+

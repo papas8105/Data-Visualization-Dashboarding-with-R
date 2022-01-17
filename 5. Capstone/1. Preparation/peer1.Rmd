@@ -1,0 +1,66 @@
+---
+title: "Leaf Data Classification"
+author: ""
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+<style>body{text-align: justify;}</style>
+
+## Description Of Topic
+
+In our modern world machine learning techniques are gaining ground for speeding up decision making, classification and 
+prediction. In this small report we will cover some useful  exploratory techniques that will help us specify 
+the algorithm to be trained in the training set for the classification of plants i.e. support vector machines, linear 
+discriminant analysis etc. 
+
+## Data Sources
+
+The dataset we will use is an open source data from UCI Machine Learning Repository and contains two files a training and 
+a test set. All our our work will be conducted in the training set to avoid bias. 
+
+[<span style="color:red">Data Source</style>](https://archive.ics.uci.edu/ml/machine-learning-databases/00288/)
+
+### Data Set Characteristics:  
+
+|                                      |                        |                           |
+|:-------------------------------------|:-----------------------|:--------------------------|
+|Data Set Characteristics: Multivariate|Number of Instances: 340|Area: Computer             |
+|Attribute Characteristics: Real       |Number of Attributes: 16|Date Donated: 2014-02-24   |
+|Associated Tasks: Classification      |Missing Values : N/A    |Number of Web Hits: 154723 |
+
+More Information: [here](https://repositorio-aberto.up.pt/bitstream/10216/67734/2/24444.pdf)
+
+## Description of the Data
+ 
+The data we will use consists of a collection of shape and texture features extracted from digital images of leaf specimens
+originating from a total of 40 different plant species. The features that were measured and recorded besides the human
+classification recorded in column *Class* are
+
+1. Class (Species)
+2. Specimen Number
+3. Eccentricity
+4. Aspect Ratio
+5. Elongation
+6. Solidity
+7. Stochastic Convexity
+8. Isoperimetric Factor
+9. Maximal Indentation Depth
+10. Lobedness
+11. Average Intensity
+12. Average Contrast
+13. Smoothness
+14. Third moment
+15. Uniformity
+16. Entropy
+
+
+## Ideas about the figures that you will create to visualize this data:
+
+The general direction we will follow and will be refined as we go forward, is to examine the correlation of features, 
+the statistical distribution of each feature, plot a heat map and a hierarchical clustering tree to see some form of 
+separation and some 2d plots or 3d plots to explore the separation of classes with colors along some features. Finally we may 
+want to see if __principal component analysis__ is useful for data compression and plot a histogram of the significance of each 
+component with a bar plot.

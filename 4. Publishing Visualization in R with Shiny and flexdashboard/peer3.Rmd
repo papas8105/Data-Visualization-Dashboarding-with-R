@@ -18,6 +18,7 @@ dat<-read_csv("../Data/cel_volden_wiseman.csv")
 dat$Party<-recode(dat$dem,`1` = "Democrat",`0` = "Republican")
 ```
 
+<style>body{text-align: justify;}</style>
 
 Page 1
 ======
