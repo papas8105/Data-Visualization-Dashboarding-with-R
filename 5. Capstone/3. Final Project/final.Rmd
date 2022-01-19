@@ -1,0 +1,325 @@
+---
+title: "Leaf Data Classification"
+author: ""
+output: html_document
+---
+
+```{r setup, include = FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+library(tidyverse,warn.conflicts = F)
+library(plotly,warn.conflicts = F)
+library(ggcorrplot)
+library(ggdendro)
+library(gridExtra,warn.conflicts = FALSE)
+library(grid)
+library(gganimate)
+library(emojifont)
+```
+<style>body{text-align: justify;}</style>
+```{css, echo=FALSE}
+.center {
+  display: table;
+  margin-right: auto;
+  margin-left: auto;
+}
+```
+
+## 0. Libraries Loaded
+
+```{r libraries}
+library(tidyverse,warn.conflicts = F,quietly = TRUE)
+library(plotly,warn.conflicts = F)
+library(ggcorrplot)
+library(ggdendro)
+library(gridExtra,warn.conflicts = FALSE)
+library(grid)
+library(gganimate)
+library(emojifont)
+```
+
+# I. Description And Data
+
+## Description Of Topic
+
+In our modern world machine learning techniques are gaining ground for speeding up decision making, classification and 
+prediction. In this small report we will cover some useful  exploratory techniques that will help us specify 
+the algorithm to be trained in the training set for the classification of plants i.e. support vector machines, linear 
+discriminant analysis, random forests etc. 
+
+## Data Sources
+
+The dataset we will use is an open source data from UCI Machine Learning Repository and contains files and folders that need 
+to be downloaded and unzipped.
+
+[<span style="color:red">Data Source</style>](https://archive.ics.uci.edu/ml/machine-learning-databases/00288/)
+
+### Data Set Characteristics:  
+
+|                                      |                        |                           |
+|:-------------------------------------|:-----------------------|:--------------------------|
+|Data Set Characteristics: Multivariate|Number of Instances: 340|Area: Computer             |
+|Attribute Characteristics: Real       |Number of Attributes: 16|Date Donated: 2014-02-24   |
+|Associated Tasks: Classification      |Missing Values : N/A    |Number of Web Hits: 154723 |
+
+More Information: [here](https://repositorio-aberto.up.pt/bitstream/10216/67734/2/24444.pdf)
+
+## Description of the Data
+ 
+The data we will use is consisted of a collection of shape and texture features extracted from digital images of leaf specimens,
+originating from a total of 40 different plant species. The features that were measured and recorded besides the human
+classification recorded in column *Class* are
+
+1. Class (Species)
+2. Specimen Number
+3. Eccentricity
+4. Aspect Ratio
+5. Elongation
+6. Solidity
+7. Stochastic Convexity
+8. Isoperimetric Factor
+9. Maximal Indentation Depth
+10. Lobedness
+11. Average Intensity
+12. Average Contrast
+13. Smoothness
+14. Third moment
+15. Uniformity
+16. Entropy
+
+
+## Ideas about the figures that we will create to visualize this data:
+
+The general direction we will follow which will be refined as we go forward, is to examine the correlation of features, 
+the statistical distribution of each feature, build a hierarchical clustering tree to see some form of 
+separation and some 2d plots or 3d plots to explore the separation of classes with colors along some features. Finally we may 
+want to see if __principal component analysis__ is useful for data compression and plot a histogram of the significance of each 
+component with a bar plot.
+
+## Data Import
+
+```{r data-import}
+if (!file.exists("leaf.zip")) {
+  download.file("https://archive.ics.uci.edu/ml/machine-learning-databases/00288/leaf.zip","leaf.zip")
+}
+unzip("leaf.zip")
+leaf <- read_csv("leaf.csv",col_types = "fddddddddddddddd")
+leaf <- tibble(leaf)
+names(leaf) <- c("Class","Specimen Number","Eccentricity","Aspect Ratio","Elongation","Solidity",
+                 "Stohastic Convexivity","Isoperimetric Factor","Maximal Identation Depth","Lobedness",
+                 "Average Intensity","Average Contrast","Smoothness","Third Moment","Uniformity","Entropy")
+```
+
+The dataset is already ready with no missing values, decompressed the which automatically is 
+downloaded will create two folders which contain the black 
+and white and color images of the species respectively, the codebook __ReadMe.pdf__ and the data set in a csv^[1. comma 
+separated value] form. Because we deal with a classification problem, in order to see the name of the plant corresponding to each class 
+in the dataset, refer to the codebook.
+
+# II. Exploratory Analysis
+
+## A.
+
+1. <u>Representation Of Classes</u>
+
+```{r graph-1,fig.align='center'}
+ggplot(leaf) + geom_bar(aes(Class)) + theme_bw() + ggtitle("Obervations Per Class") + 
+  geom_hline(yintercept = 399/40,lwd = 1.2,colour = "red")
+```
+
+We observe that there are four classes missing and that some classes are not represented equally, nonetheless the over and under 
+representation of classes in the existing set is not as seemed from the plot such a major issue compared to the missing classes.
+
+2. <u>Scatterplot Of Important Features</u>
+
+In this section we will create a scatterplot with entropy in the y-axis and entropy in the x-axis, since we were instructed 
+by experts that _Eccentricity_ and __entropy__ are the important features for classification.
+
+
+```{r graph-2a,eval=FALSE}
+ggplotly(
+  ggplot(leaf %>% select(Class,Solidity,Entropy)) + geom_point(aes(Solidity,Entropy,colour = Class)) +
+    theme(legend.position = "none")) 
+```
+<div class = "center">
+```{r graph-2b,echo = FALSE}
+ggplotly(
+  ggplot(leaf %>% select(Class,Solidity,Entropy)) + geom_point(aes(Solidity,Entropy,colour = Class)) +
+    theme(legend.position = "none"))
+```
+</div>
+
+We don't see any clear separation besides for classes 5 and 11.
+
+3. <u>Boxplots Eccentricity With Respect To Class</u>
+
+```{r graph3,fig.align = "center"}
+ggplot(leaf %>% select(Class,Eccentricity)) + geom_boxplot(aes(x = Eccentricity,y = Class)) + 
+  geom_vline(xintercept = 0.5) + theme_bw() + theme(panel.grid.major = element_blank(),panel.grid.minor = element_blank()) + 
+  ggtitle("Eccentricity Boxplot Per Class")
+```
+
+From the boxplot we see a great variation of ranges and medians per class, let's examine the means per class,
+
+```{r graph4,fig.align = "center"}
+ggplot(leaf %>% select(Class,Eccentricity) %>% mutate(Class = as.character(Class)) %>% group_by(Class) %>% 
+         summarize(mean = mean(Eccentricity))) + geom_point(aes(mean,Class),cex = 3) + theme_bw() + 
+  theme(panel.grid.major.y = element_line("red",linetype = 3),panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank()) + xlab("Eccentricity Mean") + ggtitle("Means Of Eccentricity Per Class")
+```
+
+from the _Cleveland_ plot we see a scatter of means per class without any kind of hierarchy. We make the same observation 
+in the following plot and we deduce that the _eccentricity_ feature does not make grouping an easy task like a simple 
+linear problem.
+
+```{r graph5,fig.align = "center"}
+ggplot(leaf  %>% select(Class,Eccentricity) %>%
+         group_by(Class) %>%
+         summarize(ecce_min = min(Eccentricity),ecce_max = max(Eccentricity),
+                                           range_ecc = ecce_max - ecce_min),aes(ecce_min,Class))  + 
+  geom_segment(aes(xend = ecce_max,yend = Class)) + theme_minimal() + xlab("Eccentricity") + ggtitle("Value Ranges Per Class") + 
+  theme(plot.title = element_text(hjust = 0.5))
+```
+
+## B.
+
+We have done some research on the _eccentricity_ and _entropy_ features and didn't find something useful based on our 
+instructions. Since the instructors insisted that those 
+two features in the previous section were important and we didn't find any form of separation of groups which would lead 
+to linearity, we asked them to train a model based on random forests, from this model the importance 
+of features changed with the results being presented in the following table.
+
+|Feature |Importance Value            |
+|:-------|---------------------------:|
+|Solidity                      |100.00|
+|Aspect Ratio                  | 88.14|
+|Elongation                    | 87.20|
+|Isoperimetric Factor          | 83.70|
+|Eccentricity                  | 81.69|
+|Lobedness                     | 66.40|
+|Maximal Identation Depth      | 62.18|
+|Entropy                       | 57.83|
+|Uniformity                    | 50.67|
+|Smoothness                    | 46.80|
+|Average Intensity             | 46.01|
+|Average Contrast              | 45.21|
+|Third Moment                  | 44.93|
+|Stohastic Convexivity         | 43.74|
+|Specimen Number               |  0.00|
+
+### Based on the importance of features of a random forests model we will create the following plots.
+
+6. <u>Correlation Plot Of First Five Important Features</u>
+
+We would like to explore the correlation matrix of the first five features, 
+
+```{r graph-6,fig.align = "center"}
+ggcorrplot(corr = cor(leaf %>% select(Solidity,`Aspect Ratio`,Elongation,`Isoperimetric Factor`,Eccentricity)),type = "upper",
+           title = "Correlation Plot Of The Five Most Important Features")
+```
+
+we observe that there is high negative correlation between _elongation_ and _isoperimetric factor_ about 60% and 
+positive correlation between _solidity_ and _aspect ratio_ and the other pair _aspect ratio_ and _isoperimetric factor_ 
+no more than 70% in both cases, this is a sign that these  five features will not inflate the predictions due to collinearity issues. 
+
+7. Clustering Plots
+
+We will create a dendrogram for the whole data,
+
+```{r graph-7a,fig.align = "center",eval = FALSE}
+hc <- leaf  %>% dist %>% hclust
+# Build dendrogram object from hclust results
+dend <- as.dendrogram(hc)
+# Extract the data (for rectangular lines)
+# Type can be "rectangle" or "triangle"
+dend_data <- dendro_data(dend, type = "rectangle")
+dend_data$leaf_labels <- leaf$Class[as.numeric(dend_data$labels$label)]
+dend_data$labels$class <- dend_data$leaf_labels
+ggplotly(
+ggplot() + geom_segment(data = dend_data$segments,aes(x = x,y = y,xend = xend,yend = yend)) + 
+  geom_text(data = dend_data$labels,aes(x = x,y = y,label = label,colour = class,hjust = 0.5,size =3)) + 
+  theme(legend.position = 'none') + ylab("") + scale_y_continuous(expand=c(0.2,0)) + 
+  theme(axis.line.y=element_blank(),
+    axis.ticks.y=element_blank(),
+    axis.text.y=element_blank(),
+    axis.title.y=element_blank(),
+    panel.background=element_rect(fill="white"),
+    panel.grid=element_blank()) + ggtitle("Hierarchical Clustering") + 
+  xlab("Coloring By Class"))
+```
+
+<div class = "center">
+```{r graph-7b,echo = FALSE}
+hc <- leaf  %>% dist %>% hclust
+# Build dendrogram object from hclust results
+dend <- as.dendrogram(hc)
+# Extract the data (for rectangular lines)
+# Type can be "rectangle" or "triangle"
+dend_data <- dendro_data(dend, type = "rectangle")
+dend_data$leaf_labels <- leaf$Class[as.numeric(dend_data$labels$label)]
+dend_data$labels$class <- dend_data$leaf_labels
+ggplotly(
+ggplot() + geom_segment(data = dend_data$segments,aes(x = x,y = y,xend = xend,yend = yend)) + 
+  geom_text(data = dend_data$labels,aes(x = x,y = y,label = label,colour = class,hjust = 0.5,size =3)) + 
+  theme(legend.position = 'none') + ylab("") + scale_y_continuous(expand=c(0.2,0)) + 
+  theme(axis.line.y=element_blank(),
+    axis.ticks.y=element_blank(),
+    axis.text.y=element_blank(),
+    axis.title.y=element_blank(),
+    panel.background=element_rect(fill="white"),
+    panel.grid=element_blank()) + ggtitle("Hierarchical Clustering") + 
+  xlab("Coloring By Class"))
+```
+</div>
+
+we see that there exists some kind of separation between the classes using the euclidean distance as a metric for 
+hierarchical clustering. Let us now see if __principal component analysis__ will help with data compression
+
+```{r graph-8b,fig.align = "center"}
+pca <- svd(leaf[,-1])
+data <- matrix(data = NA,nrow = 15,ncol = 2)
+data <- as.data.frame(data)
+for (ii in 1:15) {
+  data[ii,2] <- 100 * pca$d[ii]^2/sum(pca$d^2)
+  data[ii,1] <- paste("PC",ii)
+}
+names(data) <- c("PC","Variance Explained")
+ggplot(data = data) + geom_col(aes(x = reorder(PC,-`Variance Explained`),y = `Variance Explained`),fill = "cyan") + 
+  theme(axis.text = element_text(angle = 80),panel.background = element_blank()) + 
+  xlab("Principal Components") + ggtitle("Variance Explained By Component")
+```
+
+it is a good sign that the first three principal components explain 98% of the variance, so it might be useful to go to the corresponding 
+columns of U^(row space) matrix to plot the three first columns and see if there exists any pattern.
+
+```{r graph-8c,fig.align = "center"}
+pca$Class <- leaf$Class
+ggplot()  + geom_point(aes(pca$u[,1],pca$u[,2]),colour = pca$Class) -> g1
+ggplot()  + geom_point(aes(pca$u[,2],pca$u[,3]),colour = pca$Class) -> g2
+ggplot()  + geom_point(aes(pca$u[,1],pca$u[,3]),colour = pca$Class) -> g3
+grid.arrange(g1,g2,g3,ncol = 3, top = textGrob("Row Space For The First Three Components, Points Colored Per Class "))
+```
+
+We don't see any useful separation so the idea of compressing data might not be useful in this classification problem.
+
+10. <u>Animated Box Plots</u>
+
+Finally it will be useful to see an animated boxplot per class with all the features and their respective values to examine the 
+fluctuation of changes per class, since the plots in the previous sections gave us an impression of difficulty in class separation,
+with the existing techniques we were given.
+
+```{r graph-9,fig.align = "center"}
+ggplot(leaf %>% pivot_longer(cols = -Class,names_to = "Feature",values_to = "Value") %>% arrange(Feature)) + 
+  geom_boxplot(aes(y = Feature,x = Value),lwd = 2) + transition_states(Class,transition_length = 50) + 
+  labs(title = 'Class: {closest_state}') + enter_fade() + exit_fade() 
+```
+
+We can actually see that inspite of some extreme fluctuations, for most classes the range remains in the same level.
+
+## Final Words
+
+Some further inquiry needs to be done in order to obtain more data and understanding of the feature space i.e. create more 
+or refine the existing features. This was a very brief and superficial report, hope you liked it!
+
+```{r end,fig.align = "center"}
+ggplot() + geom_emoji("rose", color='red') + theme_void()
+```
