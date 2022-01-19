@@ -289,7 +289,7 @@ ggplot(data = data) + geom_col(aes(x = reorder(PC,-`Variance Explained`),y = `Va
 ```
 
 it is a good sign that the first three principal components explain 98% of the variance, so it might be useful to go to the corresponding 
-columns of U^(row space) matrix to plot the three first columns and see if there exists any pattern.
+columns of U^[row space] matrix to plot the three first columns and see if there exists any pattern.
 
 ```{r graph-8c,fig.align = "center"}
 pca$Class <- leaf$Class
